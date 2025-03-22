@@ -1,0 +1,27 @@
+import React from "react";
+import Header from "../Components/Header";
+import Home_Banner from "../Components/Home_Banner";
+import CategorySectionV1 from "../Components/CategorySectionV1";
+import CustomerTrust from "../Components/CustomerTrust";
+import SeperationLine from "../Components/SeperationLine";
+import CuratedJewelry from "../Components/CuratedJewelry";
+import Footer from "../Components/Footer";
+
+
+const HomePage = () => {
+    return (
+        <>
+            <Header />
+            <div className="pt-[101px] w-full">
+                <Home_Banner />
+                <CategorySectionV1 />
+                <SeperationLine />
+                <CustomerTrust />
+                <CuratedJewelry />
+                <Footer />
+            </div>
+        </>
+    );
+};
+
+export default HomePage;
