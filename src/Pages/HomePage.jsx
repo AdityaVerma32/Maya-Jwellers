@@ -6,6 +6,7 @@ import CustomerTrust from "../Components/CustomerTrust";
 import SeperationLine from "../Components/SeperationLine";
 import CuratedJewelry from "../Components/CuratedJewelry";
 import Footer from "../Components/Footer";
+import MobileFilterSortUI from "../Components/MobileFilterSortUI";
 
 
 const HomePage = () => {
@@ -19,6 +20,7 @@ const HomePage = () => {
                 <CustomerTrust />
                 <CuratedJewelry />
                 <Footer />
+                <MobileFilterSortUI />
             </div>
         </>
     );

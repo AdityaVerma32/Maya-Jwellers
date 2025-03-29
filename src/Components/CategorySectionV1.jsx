@@ -1,4 +1,6 @@
 import React from 'react'
+import { Link } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 function CategorySectionV1() {
 
@@ -12,6 +14,8 @@ function CategorySectionV1() {
         { name: "CHAINS", image: "/Images/category_img7.jpg" },
     ];
 
+    const navigate = useNavigate();
+
     return (
         <section className="text-center py-10">
             <h2 className="text-3xl font-semibold font-playfair-display">Find Your Perfect Match</h2>
@@ -19,7 +23,7 @@ function CategorySectionV1() {
 
             <div className="mt-6 px-5 flex flex-col items-center gap-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:px-6">
                 {categories.map((category, index) => (
-                    <div key={index} className="text-center w-full max-w-sm md:max-w-full mx-4 md:mx-0">
+                    <div key={index} className="text-center w-full max-w-sm md:max-w-full mx-4 md:mx-0" onClick={() => navigate('/products')}>
                         <div className="rounded-2xl overflow-hidden shadow-md h-96 md:h-[500px]">
                             <img
                                 src={category.image}
