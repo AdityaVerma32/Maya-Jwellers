@@ -23,7 +23,11 @@ function CategorySectionV1() {
 
             <div className="mt-6 px-5 flex flex-col items-center gap-6 md:grid md:grid-cols-2 lg:grid-cols-4 md:px-6">
                 {categories.map((category, index) => (
-                    <div key={index} className="text-center w-full max-w-sm md:max-w-full mx-4 md:mx-0" onClick={() => navigate('/products')}>
+                    <div key={index} className="text-center w-full max-w-sm md:max-w-full mx-4 md:mx-0"
+                        onClick={() => {
+                            navigate('/products');
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}>
                         <div className="rounded-2xl overflow-hidden shadow-md h-96 md:h-[500px]">
                             <img
                                 src={category.image}
