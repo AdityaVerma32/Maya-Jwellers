@@ -20,7 +20,6 @@ const HomePage = () => {
                 <CustomerTrust />
                 <CuratedJewelry />
                 <Footer />
-                <MobileFilterSortUI />
             </div>
         </>
     );
