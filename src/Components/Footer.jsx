@@ -2,7 +2,7 @@ import { Mail, Facebook, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="bg-[#021433] text-white py-8 md:m-3 rounded-3xl">
+        <footer className="bg-[#021433] text-white py-8 md:m-3 md:rounded-3xl">
             <div className="container mx-auto px-6 flex flex-col md:flex-row items-center justify-between">
                 {/* Logo and Name */}
                 <div className="flex flex-col items-center md:items-center">
