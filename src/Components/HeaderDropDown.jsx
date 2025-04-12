@@ -39,7 +39,7 @@ function HeaderDropDown({ hoveredCategory, setHoveredCategory }) {
                     </div>
                     <div className="ml-6">
                         {/* Categories Title */}
-                        <div className="font-bold text-2xl font-playfair-display mb-2">Categories</div>
+                        <div className="font-bold text-2xl font-playfair-display mb-2">Categories Here</div>
 
                         {/* Category List Container */}
                         <div className="grid grid-cols-4 gap-6">
