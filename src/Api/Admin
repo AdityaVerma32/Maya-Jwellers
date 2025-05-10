@@ -7,16 +7,24 @@ export const adminLogin = async (credentials) => {
         console.log(res.data);
         return res.data;
     } catch (error) {
-        throw error;
+        if (error.response) {
+            return error.response.data;
+        } else {
+            throw error;
+        }
     }
 };
 
 export const adminLogout = async () => {
     try {
-        const res = await axiosClient(true).get(API_ROUTES.ADMIN.LOGOUT);
+        const res = await axiosClient(true).post(API_ROUTES.ADMIN.LOGOUT);
         return res.data;
     } catch (error) {
-        throw error;
+        if (error.response) {
+            return error.response.data;
+        } else {
+            throw error;
+        }
     }
 }
 

@@ -11,7 +11,8 @@ const axiosClient = (auth = false) => {
     });
   
     if (auth) {
-      const token = localStorage.getItem('token'); // or sessionStorage / cookie
+      const token = localStorage.getItem('auth_token'); // or sessionStorage / cookie
+      console.log('Token:', token);
       if (token) {
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       }

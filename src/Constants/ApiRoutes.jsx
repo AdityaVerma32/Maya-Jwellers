@@ -1,14 +1,12 @@
-const BASE = '/api'; // or empty string if already handled in axiosClient
-
 export const API_ROUTES = {
   ADMIN: {
-    LOGIN: `${BASE}/login`,
-    REGISTER: `${BASE}/register`,
-    USER: `${BASE}/user`,
-    LOGOUT: `${BASE}/logout`
+    LOGIN: `/login`,
+    REGISTER: `/register`,
+    USER: `/user`,
+    LOGOUT: `/logout`
   },
   PUBLIC: {
-    PRODUCTS: `${BASE}/products`,
-    CATEGORIES: `${BASE}/categories`,
+    PRODUCTS: `/products`,
+    CATEGORIES: `/categories`,
   },
 };

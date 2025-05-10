@@ -1,10 +1,13 @@
-import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { adminLogin } from '../../Api/Admin';
 import useAuthStore from '../../Store/useAuthStore';
+import { useState } from 'react';
 
 const AdminLogin = () => {
+
+    const [loginError, setLoginError] = useState(null);
+
     const initialValues = {
         email: '',
         password: '',
@@ -21,15 +24,11 @@ const AdminLogin = () => {
             if (response.success) {
                 // Save token and user details to Zustand store and localStorage
                 useAuthStore.getState().login(response.data.user, response.data.token);
-                alert('Login successful!'); // Handle success
-              } else {
-                alert(data.message); // Handle error
-              }
-            
-            // handle storing token/session, redirect, etc.
+            } else {
+                setLoginError(response.message)
+            }
         } catch (error) {
             console.error(error);
-            setErrors({ email: 'Invalid credentials' }); // Custom error handling
         } finally {
             setSubmitting(false);
         }
@@ -38,6 +37,14 @@ const AdminLogin = () => {
     return (
         <div className="min-h-screen flex items-center justify-center bg-[#f9fafb] px-4">
             <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-lg">
+                {
+                    loginError && (
+                        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                            <strong className="font-bold">Error! </strong>
+                            <span className="block sm:inline">{loginError}</span>
+                        </div>
+                    )
+                }
                 <h2 className="text-2xl font-bold text-center text-[#455f8c] mb-6">
                     Maya Jewellers Admin
                 </h2>
