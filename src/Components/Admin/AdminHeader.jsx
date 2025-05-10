@@ -19,7 +19,7 @@ function AdminHeader({ title, isSidebarOpen, setIsSidebarOpen }) {
     }
 
     return (
-        <div className="bg-white shadow-md p-4 flex justify-between items-center">
+        <div className="fixed top-0 left-0 right-0 z-40 bg-white shadow-md p-4 flex justify-between items-center md:ml-64">
             <div className="flex items-center gap-3">
                 {/* Menu button for mobile */}
                 <button className="md:hidden" onClick={() => setIsSidebarOpen(true)}>

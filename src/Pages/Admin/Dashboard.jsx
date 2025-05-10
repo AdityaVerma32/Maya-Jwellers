@@ -38,7 +38,7 @@ export default function Dashboard() {
         />
 
         {/* Main Content */}
-        <main className="md:p-4">
+        <main className="ml-0 md:ml-64 pt-16 md:p-4 overflow-y-auto min-h-screen bg-gray-50 md:pt-18">
           <Routes>
             <Route path="" element={<p>This is the Dashboard section.</p>} />
             <Route path="users" element={<p>This is the Users section.</p>} />

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function SubHeader({ title, onAddNew, onFilter, onSearch }) {
     return (
-        <div className="bg-white px-3 py-3 rounded-md shadow-md">
+        <div className="fixed top-18 left-0 md:left-64 right-0 z-30 bg-white px-3 py-3 shadow-md">
             <div className="flex justify-between items-center">
                 {/* Search Input with Icon */}
                 <div className="relative">

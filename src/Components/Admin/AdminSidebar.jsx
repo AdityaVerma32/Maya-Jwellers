@@ -29,10 +29,10 @@ function AdminSidebar({ isSidebarOpen, setIsSidebarOpen }) {
     };
 
     return (
-        <div className={`fixed md:static top-0 left-0 w-64 bg-[#455f8c] text-white z-50 transform transition-transform duration-300
-            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-            h-screen md:h-auto`}
+        <div className={`fixed top-0 left-0 w-64 h-screen bg-[#455f8c] text-white z-50 transform transition-transform duration-300
+            ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}
         >
+
             <div className="flex justify-between items-center p-4 border-b border-white">
                 <h1 className="text-xl font-bold">Admin Panel</h1>
                 <button className="md:hidden" onClick={() => setIsSidebarOpen(false)}>
@@ -44,9 +44,8 @@ function AdminSidebar({ isSidebarOpen, setIsSidebarOpen }) {
                     <li key={idx}>
                         <Link
                             to={item.path}
-                            className={`block p-2 rounded hover:bg-white/10 transition ${
-                                location.pathname === item.path ? 'bg-white/20 font-semibold' : ''
-                            }`}
+                            className={`block p-2 rounded hover:bg-white/10 transition ${location.pathname === item.path ? 'bg-white/20 font-semibold' : ''
+                                }`}
                             onClick={() => setIsSidebarOpen(false)}
                         >
                             {item.label}
