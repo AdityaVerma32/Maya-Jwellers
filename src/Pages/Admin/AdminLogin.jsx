@@ -1,7 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { adminLogin } from '../../Api/Admin';
+import { adminLogin } from '../../Api/Admin.jsx';
 import useAuthStore from '../../Store/useAuthStore';
 
 const AdminLogin = () => {
@@ -22,10 +22,10 @@ const AdminLogin = () => {
                 // Save token and user details to Zustand store and localStorage
                 useAuthStore.getState().login(response.data.user, response.data.token);
                 alert('Login successful!'); // Handle success
-              } else {
+            } else {
                 alert(data.message); // Handle error
-              }
-            
+            }
+
             // handle storing token/session, redirect, etc.
         } catch (error) {
             console.error(error);
