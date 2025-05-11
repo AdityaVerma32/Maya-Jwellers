@@ -1,12 +1,14 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { addCategory } from '../../../Api/Category';
 
 const AddCategories = () => {
     const [serverError, setServerError] = useState(null);
     const [successMessage, setSuccessMessage] = useState(null);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
     const navigate = useNavigate();
 
     const initialValues = {
@@ -16,23 +18,38 @@ const AddCategories = () => {
 
     const validationSchema = Yup.object({
         name: Yup.string().trim().required('Category name is required'),
-        image: Yup.mixed().required('Image is required').test(
-            'fileSize',
-            'File too large',
-            value => value && value.size <= 5 * 1024 * 1024 // Max file size 5MB
-        ).test(
-            'fileType',
-            'Unsupported file format',
-            value => value && ['image/jpeg', 'image/png'].includes(value.type)
-        ),
+        image: Yup.mixed()
+            .nullable()
+            .test('fileSize', 'File too large', value =>
+                !value || (value && value.size <= 5 * 1024 * 1024)
+            )
+            .test('fileType', 'Unsupported file format', value =>
+                !value || (value && ['image/jpeg', 'image/png'].includes(value.type))
+            ),
     });
+
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+                URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
 
     const onSubmit = async (values, { setSubmitting, resetForm }) => {
         setServerError(null);
         setSuccessMessage(null);
         try {
             console.log('Form values:', values);
-            resetForm();
+            const response = await addCategory(values);
+            if (response.success) {
+                setSuccessMessage('Category added successfully!');
+                setSelectedImage(null); // Reset selected image
+                setPreviewUrl(null); // Reset preview URL
+                resetForm();
+            } else {
+                setServerError(response.message || 'Failed to add category');
+            }
         } catch (error) {
             console.error(error);
             setServerError('Something went wrong. Please try again.');
@@ -70,7 +87,7 @@ const AddCategories = () => {
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
                 >
-                    {({ isSubmitting }) => (
+                    {({ isSubmitting, setFieldValue }) => (
                         <Form className="space-y-4">
                             <div>
                                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -94,17 +111,27 @@ const AddCategories = () => {
                                     type="file"
                                     accept="image/jpeg, image/png"
                                     onChange={(e) => {
-                                        handleImageChange(e);
-                                        setFieldValue("image", e.target.files[0]);
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            setSelectedImage(file);
+                                            setPreviewUrl(URL.createObjectURL(file)); // create preview URL
+                                            setFieldValue('image', file);
+                                        }
                                     }}
                                     className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-xl focus:ring-[#455f8c] focus:border-[#455f8c] shadow-sm"
                                 />
                                 <ErrorMessage name="image" component="div" className="text-sm text-red-500 mt-1" />
-                                {selectedImage && (
-                                    <div className="mt-2">
-                                        <strong>Selected Image:</strong> {selectedImage.name}
+                                {previewUrl && (
+                                    <div className="mt-4">
+                                        <strong>Preview:</strong>
+                                        <img
+                                            src={previewUrl}
+                                            alt="Selected preview"
+                                            className="mt-2 w-32 h-32 object-cover border rounded-md"
+                                        />
                                     </div>
                                 )}
+
                             </div>
 
                             <button
