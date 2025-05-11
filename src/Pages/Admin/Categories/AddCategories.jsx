@@ -1,8 +1,8 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { addCategory } from '../../../Api/Category';
+import { useNavigate, useParams } from 'react-router-dom';
+import { addCategory, getCategoryById, updateCategory } from '../../../Api/Category';
 
 const AddCategories = () => {
     const [serverError, setServerError] = useState(null);
@@ -10,11 +10,13 @@ const AddCategories = () => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const navigate = useNavigate();
+    const { categoryId } = useParams();
+    const isEditMode = Boolean(categoryId);
 
-    const initialValues = {
+    const [initialValues, setInitialValues] = useState({
         name: '',
-        image: null,  // Adding an image field to initialValues
-    };
+        image: null,
+    });
 
     const validationSchema = Yup.object({
         name: Yup.string().trim().required('Category name is required'),
@@ -29,6 +31,30 @@ const AddCategories = () => {
     });
 
     useEffect(() => {
+        const fetchCategory = async () => {
+            if (isEditMode && categoryId) {
+
+                try {
+                    const response = await getCategoryById(categoryId);
+                    if (response.success) {
+                        setInitialValues({
+                            name: response.data.name,
+                            image: null, // Don't prefill image input; keep it nullable
+                        });
+                        if (response.data.image) {
+                            setPreviewUrl(response.data.image); // if image URL is available
+                        }
+                        console.log('Fetched category:', response.data);
+                    }
+                } catch (err) {
+                    setServerError('Failed to fetch category');
+                }
+            }
+        };
+        fetchCategory();
+    }, [categoryId]);
+
+    useEffect(() => {
         return () => {
             if (previewUrl) {
                 URL.revokeObjectURL(previewUrl);
@@ -40,15 +66,23 @@ const AddCategories = () => {
         setServerError(null);
         setSuccessMessage(null);
         try {
-            console.log('Form values:', values);
-            const response = await addCategory(values);
-            if (response.success) {
-                setSuccessMessage('Category added successfully!');
-                setSelectedImage(null); // Reset selected image
-                setPreviewUrl(null); // Reset preview URL
-                resetForm();
+            let response;
+            if (isEditMode) {
+                response = await updateCategory(categoryId, values);
             } else {
-                setServerError(response.message || 'Failed to add category');
+                response = await addCategory(values);
+            }
+
+
+            if (response.success) {
+                setSuccessMessage(isEditMode ? 'Category updated successfully!' : 'Category added successfully!');
+                if (!isEditMode) {
+                    resetForm();
+                    setSelectedImage(null);
+                    setPreviewUrl(null);
+                }
+            } else {
+                setServerError(response.message || 'Operation failed');
             }
         } catch (error) {
             console.error(error);
@@ -70,7 +104,7 @@ const AddCategories = () => {
             </div>
             <div className="max-w mx-auto bg-white p-6">
                 <h2 className="text-2xl font-bold text-center text-[#455f8c] mb-6">
-                    Add New Category
+                    {isEditMode ? 'Edit Category' : 'Add New Category'}
                 </h2>
                 {serverError && (
                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded mb-4">
@@ -86,6 +120,7 @@ const AddCategories = () => {
                     initialValues={initialValues}
                     validationSchema={validationSchema}
                     onSubmit={onSubmit}
+                    enableReinitialize={true} // Add this line to ensure Formik reinitializes when initialValues change
                 >
                     {({ isSubmitting, setFieldValue }) => (
                         <Form className="space-y-4">
@@ -139,7 +174,7 @@ const AddCategories = () => {
                                 disabled={isSubmitting}
                                 className="w-full py-2 px-4 text-white bg-[#455f8c] hover:bg-[#3a4e74] rounded-xl transition duration-200"
                             >
-                                {isSubmitting ? 'Adding...' : 'Add Category'}
+                                {isSubmitting ? (isEditMode ? 'Updating...' : 'Adding...') : (isEditMode ? 'Update Category' : 'Add Category')}
                             </button>
                         </Form>
                     )}

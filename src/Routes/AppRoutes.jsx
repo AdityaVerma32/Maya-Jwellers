@@ -31,6 +31,7 @@ const AppRoutes = () => (
                 <Route path="settings" element={<Settings />} />
                 <Route path="categories" element={<Categories />} />
                 <Route path="categories/add" element={<AddCategories />} />
+                <Route path="categories/edit/:categoryId" element={<AddCategories />} />
             </Route>
         </Route>
     </Routes>

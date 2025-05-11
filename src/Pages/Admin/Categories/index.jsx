@@ -3,24 +3,8 @@ import { Pencil, Trash2, Info } from 'lucide-react'; // Lucide icons
 import SubHeader from '../../../Components/Admin/SubHeader'
 import Pagination from '../../../Components/Admin/pagination';
 import { useEffect } from 'react';
-
-
-const DUMMY_DATA = [
-    { id: 1, name: 'Gold Rings' },
-    { id: 2, name: 'Silver Anklets' },
-    { id: 3, name: 'Temple Items' },
-    { id: 4, name: 'Resale Gold' },
-    { id: 5, name: 'Handmade Silver' },
-    { id: 6, name: 'Gold Chains' },
-    { id: 7, name: 'Silver Glass Sets' },
-    { id: 8, name: 'Gold Bangles' },
-    { id: 9, name: 'Silver Bowls' },
-    { id: 10, name: 'Silver Statues' },
-    { id: 11, name: 'Kids Jewellery' },
-    { id: 12, name: 'Holy Pendants' },
-];
-
-const ITEMS_PER_PAGE = 10;
+import { getCategories } from '../../../Api/Category';
+import { useNavigate } from 'react-router-dom';
 
 
 function Categories() {
@@ -31,51 +15,47 @@ function Categories() {
     const [loading, setLoading] = useState(true);
     const [timeoutReached, setTimeoutReached] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
-
+    const [totalPages, setTotalPages] = useState(0);
+    const navigate = useNavigate();
 
     // Simulate API fetch with dummy data
     useEffect(() => {
         setLoading(true);
-        const fetchTimeout = setTimeout(() => {
-            setTimeoutReached(true);
-            setLoading(false);
-        }, 5000); // 5 sec timeout
 
-        setTimeout(() => {
-            setCategories(DUMMY_DATA);
-            setFilteredCategories(DUMMY_DATA);
-            setLoading(false);
-            clearTimeout(fetchTimeout);
-        }, 1200); // Simulated delay
-    }, []);
+        const fetchCategories = async () => {
+            try {
+                const response = await getCategories(searchTerm, currentPage)
+                if (response.success) {
+                    setCategories(response.data.categories);
+                    setFilteredCategories(response.data.categories);
+                    setTotalPages(response.data.pagination.totalPages);
+                    setLoading(false);
+                } else {
+                    console.error('Error fetching categories:', response.message);
+                }
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchCategories();
+    }, [searchTerm, currentPage]);
 
     const handleOnFilter = () => {
-        const filtered = DUMMY_DATA.filter((item) =>
-            item.name.toLowerCase().includes('gold')
-        );
-        setFilteredCategories(filtered);
-        setCurrentPage(1);
+        console.log('Filter categories');
     };
 
     const handleOnSearch = (term) => {
         setSearchTerm(term);
-        const filtered = categories.filter((item) =>
-            item.name.toLowerCase().includes(term.toLowerCase())
-        );
-        setFilteredCategories(filtered);
         setCurrentPage(1);
     };
 
-    const handleEditCategory = (id) => console.log('Edit category with ID:', id);
+    const handleEditCategory = (id) => {
+        navigate(`edit/${id}`);
+    };
     const handleRemoveCategory = (id) => console.log('Remove category with ID:', id);
     const handleInfoCategory = (id) => console.log('Info for category with ID:', id);
-
-    // Pagination logic
-    const totalPages = Math.ceil(filteredCategories.length / ITEMS_PER_PAGE);
-    const paginatedItems = filteredCategories.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        currentPage * ITEMS_PER_PAGE
-    );
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -104,7 +84,7 @@ function Categories() {
                 <div className="overflow-x-auto">
                     <div className="py-4">
                         <div className="grid grid-cols-1 gap-6">
-                            {paginatedItems.map((category) => (
+                            {filteredCategories.map((category) => (
                                 <div
                                     key={category.id}
                                     className="flex items-center justify-between p-4 bg-white hover:shadow-md transition-shadow duration-300"

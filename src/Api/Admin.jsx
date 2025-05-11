@@ -4,7 +4,6 @@ import { API_ROUTES } from "../Constants/ApiRoutes";
 export const adminLogin = async (credentials) => {
     try {
         const res = await axiosClient(false).post(API_ROUTES.ADMIN.LOGIN, credentials);
-        console.log(res.data);
         return res.data;
     } catch (error) {
         if (error.response) {

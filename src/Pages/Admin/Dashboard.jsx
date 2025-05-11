@@ -47,6 +47,7 @@ export default function Dashboard() {
             <Route path="settings" element={<p>This is the Settings section.</p>} />
             <Route path="categories" element={<Categories />} />
             <Route path="categories/add" element={<AddCategories/>} />
+            <Route path="categories/edit/:categoryId" element={<AddCategories />} />
             {/* Add more routes as needed */}
           </Routes>
         </main>
