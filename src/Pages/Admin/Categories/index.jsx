@@ -5,17 +5,18 @@ import Pagination from '../../../Components/Admin/pagination';
 import { useEffect } from 'react';
 import { getCategories } from '../../../Api/Category';
 import { useNavigate } from 'react-router-dom';
+import CategoryModal from '../../../Components/Admin/Category/CategoryModal';
 
 
 function Categories() {
 
-    const [categories, setCategories] = useState([]);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true);
-    const [timeoutReached, setTimeoutReached] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const navigate = useNavigate();
 
     // Simulate API fetch with dummy data
@@ -26,7 +27,6 @@ function Categories() {
             try {
                 const response = await getCategories(searchTerm, currentPage)
                 if (response.success) {
-                    setCategories(response.data.categories);
                     setFilteredCategories(response.data.categories);
                     setTotalPages(response.data.pagination.totalPages);
                     setLoading(false);
@@ -55,7 +55,15 @@ function Categories() {
         navigate(`edit/${id}`);
     };
     const handleRemoveCategory = (id) => console.log('Remove category with ID:', id);
-    const handleInfoCategory = (id) => console.log('Info for category with ID:', id);
+    const openModal = async (category) => {
+        setSelectedCategory(category);
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedCategory(null);
+    };
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -76,7 +84,7 @@ function Categories() {
             {/* Categories content placeholder */}
             {loading ? (
                 <div className="text-center py-6 text-gray-500">Loading...</div>
-            ) : timeoutReached && filteredCategories.length === 0 ? (
+            ) : filteredCategories.length === 0 ? (
                 <div className="text-center py-10 text-gray-500 text-lg">
                     No categories fetched.
                 </div>
@@ -104,7 +112,7 @@ function Categories() {
                                             <Trash2 size={18} />
                                         </button>
                                         <button
-                                            onClick={() => handleInfoCategory(category.id)}
+                                            onClick={() => openModal(category)}
                                             className="text-green-500 hover:text-green-700"
                                         >
                                             <Info size={18} />
@@ -122,6 +130,13 @@ function Categories() {
                     </div>
                 </div>
             )}
+
+            <CategoryModal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                categoryName={selectedCategory?.name}
+                categoryImage={selectedCategory?.image}
+            />
         </div>
     )
 }
